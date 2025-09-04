@@ -8,16 +8,26 @@
 <body>
    <h1>to do list</h1>
    <input type ="text"
-   id="task input"
+   id="taskInput"
    placeholder="add a task"
    />
    <button onclick="addTask()">Add</button>
 
    <script>
-function addTask(){
-    var textbox = document.getElementById("task input");
-    console.log(taskinput.value);
+    function addTask(){
+        getTaskText();
     
+    }
+    
+function getTaskText(){
+    const input = document.getElementById('taskInput');
+    const text = input.value.trim();
+    console.log("getTaskText() called: "+ input.value);
+
+    return{text,input};
+
+   
+
 }
 
    </script>
