@@ -43,9 +43,44 @@
 openStreetMap.addTo(map);
 console.log("base map tile layer loaded" + Date());
 
-   }
+const markerGroups ={};
+
+fetch(mapDataUrl)
+    .then(response => response.json())
+    .then(data =>{
+        data.forEach(pin =>{
+            const type = pin.locationType || "other";
+
+            if(!markerGroups[type]) {
+                markerGroups[type] = L.layerGroup();
+            }
+            const marker = L.marker([pin.lat, pin.lng]).addto(map);
+            const img = `<img src='${pin.img}' class="popup-image">`;
+            marker
+            console.log(`${pin.name} Loaded` +Date());
+            markerGroups[type].addLayer(marker);
+    });
+
+        //add all groups to map initially
+        Object.values(markerGroups).forEach(group => group.addTo(map));
+
+            const baseMaps={
+                "OpenStreetMap": openStreetMap,
+                "Satellite": satellite
+            }
+            const overlayMaps = {};
+            Object.keys(markerGroups).forEach(type => {
+                overlayMaps[type] = markerGroups[type];
+            });
+            L.control.layers(baseMaps, overlayMaps,{collapsed: false}.addTo(map));
+
+})
+.catch(err => console.error('Error loading JSON:', err));
+
+        
+}
    document.addEventListener('DOMContentLoaded',()=> {
-        initMap('');
+        initMap('campus-map.json');
    });
 </script>
 </html> 
